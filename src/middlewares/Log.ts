@@ -3,8 +3,7 @@ import DailyRotateFile from "winston-daily-rotate-file";
 import { getNamespace } from "continuation-local-storage";
 import Locals from "../providers/Locals";
 import expressWinston from "express-winston";
-const { combine, colorize, simple, timestamp } = format;
-const { LOG_DIR, LOG_FILE, NODE_ENV } = Locals.config();
+const { LOG_DIR, LOG_FILE } = Locals.config();
 
 const winstonLogger = createLogger({
     level: 'info',
@@ -21,16 +20,6 @@ const winstonLogger = createLogger({
     ],
     exitOnError: false
 });
-
-if (NODE_ENV !== 'prod') {
-    winstonLogger.add(new transports.Console({
-        format: combine(
-            colorize(),
-            simple(),
-            timestamp()
-        )
-    }));
-}
 
 // Wrap Winston logger to print reqId in each log
 const formatMessage = (message: string) => {
