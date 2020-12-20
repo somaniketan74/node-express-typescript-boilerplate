@@ -10,6 +10,7 @@ import Locals from './Locals';
 import Routes from './Routes';
 import Bootstrap from '../middlewares/Kernel';
 import ExceptionHandler from '../exception/Handler';
+import { expWin, expErrWin } from '../middlewares/Log';
 
 class Express {
 	/**
@@ -25,7 +26,9 @@ class Express {
 
 		this.mountDotEnv();
 		this.mountMiddlewares();
+		this.mountRequestLogs();
 		this.mountRoutes();
+		this.mountErrorLogs();
 	}
 
 	private mountDotEnv (): void {
@@ -44,6 +47,13 @@ class Express {
 	 */
 	private mountRoutes (): void {
 		this.express = Routes.mountApi(this.express);
+	}
+
+	private mountRequestLogs (): void {
+		this.express.use(expWin);
+	}
+	private mountErrorLogs (): void {
+		this.express.use(expErrWin);
 	}
 
 	/**
